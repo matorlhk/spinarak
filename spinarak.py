@@ -1,4 +1,4 @@
-import chromedriver_autoinstaller, os, uuid, random, smtplib, time
+import chromedriver_autoinstaller, os, uuid, random, smtplib, time, base64
 from datetime import date
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -18,7 +18,7 @@ receiver_email = os.environ['GMAIL_RECIPIENT']
 acs_connection_string = os.environ['ACS_CONNECTION_STRING'] # Azure Communication Services connection string
 
 num_iterations = 10
-day_of_month='28'
+day_of_month='1'
 num_of_guests=2
 location = 'Tokyo'
 #location = 'Osaka'
@@ -69,7 +69,7 @@ def send_email(avail_slots, filename):
         }
 
         poller = email_client.begin_send(message)
-        print("Result: " + poller.result())
+        
     except Exception as ex:
         print('Exception:')
         print(ex)
@@ -141,7 +141,7 @@ def create_booking(day_of_month, num_of_guests, location):
         available_slots = []
         global magic_cell
         for cell in calendar_cells:
-            if "(full)" not in cell.text.lower() and "n/a" not in cell.text.lower():
+            if "(full)" in cell.text.lower() and "n/a" not in cell.text.lower():
                 available_slots.append(cell.text.strip())
                 available = True
                 magic_cell = cell.text
@@ -166,6 +166,3 @@ def create_booking(day_of_month, num_of_guests, location):
         pass
 
 [create_booking(day_of_month, num_of_guests, location) for x in range(num_iterations)]
-
-# test
-#send_email()
