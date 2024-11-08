@@ -69,7 +69,7 @@ def send_email(avail_slots, filename):
         }
 
         poller = email_client.begin_send(message)
-        print("Result: " + poller.result())
+        
     except Exception as ex:
         print('Exception:')
         print(ex)
