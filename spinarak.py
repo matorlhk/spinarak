@@ -19,7 +19,7 @@ acs_connection_string = os.environ['ACS_CONNECTION_STRING'] # Azure Communicatio
 
 num_iterations = 10
 day_of_month='28'
-num_of_guests=3
+num_of_guests=2
 location = 'Tokyo'
 #location = 'Osaka'
 
@@ -69,7 +69,7 @@ def send_email(avail_slots, filename):
         }
 
         poller = email_client.begin_send(message)
-        
+        print("Result: " + poller.result())
     except Exception as ex:
         print('Exception:')
         print(ex)
@@ -112,16 +112,23 @@ def create_booking(day_of_month, num_of_guests, location):
     try:
         # XPaths is what will likely have to be changed if this bot breaks due to the Pokemon Cafe site updating the XML responses
         # Chrome > Developer Tools > Elements > Inspect Element > Right-click selected HTML > Copy XPath
-        driver.find_element(By.XPATH, "//*[@id=\"forms-agree\"]/div/div[1]/label").click()
-        driver.find_element(By.XPATH, "//*[@id=\"forms-agree\"]/div/div[2]/button").click()
+        
+        # Click on the agree checkbox
+        driver.find_element(By.CSS_SELECTOR, ".agreeChecked").click()
+    
+        # Click on the agree button
+        driver.find_element(By.CSS_SELECTOR, ".button-container-agree:nth-child(2) > .button").click()
+
         time.sleep(random.randint(3, 6))
-        driver.find_element(By.XPATH, "/html/body/div/div/div[2]/div/div/a").click()
+        driver.find_element(By.CSS_SELECTOR, ".button").click()
         time.sleep(random.randint(3, 6))
         select = Select(driver.find_element(By.NAME, 'guest'))
         time.sleep(random.randint(2, 3))
 	
         select.select_by_index(num_of_guests)
-        #time.sleep(random.randint(5, 10))
+        
+        # Click on the next month button
+        driver.find_element(By.CSS_SELECTOR, "div:nth-child(3) > .calendar-pager").click()
 
         # Check if the updated page indicates availability
         soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -151,6 +158,7 @@ def create_booking(day_of_month, num_of_guests, location):
             driver.save_screenshot(filename)
             send_email(available_slots, filename)
         else:
+            send_email(available_slots, "")
             print("No available slots found :(")
 
         driver.quit()
