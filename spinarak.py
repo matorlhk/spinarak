@@ -151,7 +151,6 @@ def create_booking(day_of_month, num_of_guests, location):
             driver.save_screenshot(filename)
             send_email(available_slots, filename)
         else:
-            send_email(available_slots, "")
             print("No available slots found :(")
 
         driver.quit()
