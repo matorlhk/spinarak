@@ -18,8 +18,8 @@ receiver_email = os.environ['GMAIL_RECIPIENT']
 acs_connection_string = os.environ['ACS_CONNECTION_STRING'] # Azure Communication Services connection string
 
 num_iterations = 10
-day_of_month='1'
-num_of_guests=1
+day_of_month='28'
+num_of_guests=3
 location = 'Tokyo'
 #location = 'Osaka'
 
@@ -34,6 +34,9 @@ chromedriver_autoinstaller.install()  # Check if the current version of chromedr
 
 def send_email(avail_slots, filename):
     try:
+        # server = smtplib.SMTP("smtp.gmail.com", 587)
+        # server.starttls()
+        # server.login(sender_email, password)
         email_client = EmailClient.from_connection_string(acs_connection_string)
 
         subject = "\U0001F6A8 Pokemon Cafe Available days: "
@@ -148,8 +151,8 @@ def create_booking(day_of_month, num_of_guests, location):
             driver.save_screenshot(filename)
             send_email(available_slots, filename)
         else:
+            send_email(available_slots, "")
             print("No available slots found :(")
-	    send_email(available_slots, '')
 
         driver.quit()
     except NoSuchElementException:
