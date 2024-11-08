@@ -141,7 +141,7 @@ def create_booking(day_of_month, num_of_guests, location):
         available_slots = []
         global magic_cell
         for cell in calendar_cells:
-            if "(full)" in cell.text.lower() and "n/a" not in cell.text.lower():
+            if "(full)" not in cell.text.lower() and "n/a" not in cell.text.lower():
                 available_slots.append(cell.text.strip())
                 available = True
                 magic_cell = cell.text
